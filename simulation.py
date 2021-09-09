@@ -21,22 +21,85 @@ robot = pybullet.loadURDF("kuka_iiwa/model_free_base.urdf", robotStartPos, useFi
 
 
 num_joints = pybullet.getNumJoints(robot)
-print("Number of joints: ", num_joints)
+print("\nNumber of joints: ", num_joints)
 
 joint_positions = [j[0] for j in pybullet.getJointStates(robot, range(num_joints))]
-print("Joint positions (angles in rads): ", joint_positions)
+print("\nJoint positions (angles in rads): ", joint_positions)
+
+position, orientation = pybullet.getBasePositionAndOrientation(robot)
+print("\nThe robot position is {}".format(position))
+print("The robot orientation (x, y, z, w) is {}".format(orientation))
 
 world_position, world_orientation = pybullet.getLinkState(robot,2)[:2]
-print("World position: ", world_position)
+print("\nWorld position: ", world_position)
+
+
+# print information about joint 2
+joint_index = 2
+joint_info = pybullet.getJointInfo(robot, joint_index)
+print("\nJoint index: {}".format(joint_info[0]))
+print("Joint name: {}".format(joint_info[1]))
+print("Joint type: {}".format(joint_info[2]))
+print("First position index: {}".format(joint_info[3]))
+print("First velocity index: {}".format(joint_info[4]))
+print("flags: {}".format(joint_info[5]))
+print("Joint damping value: {}".format(joint_info[6]))
+print("Joint friction value: {}".format(joint_info[7]))
+print("Joint positional lower limit: {}".format(joint_info[8]))
+print("Joint positional upper limit: {}".format(joint_info[9]))
+print("Joint max force: {}".format(joint_info[10]))
+print("Joint max velocity {}".format(joint_info[11]))
+print("Name of link: {}".format(joint_info[12]))
+print("Joint axis in local frame: {}".format(joint_info[13]))
+print("Joint position in parent frame: {}".format(joint_info[14]))
+print("Joint orientation in parent frame: {}".format(joint_info[15]))
+print("Parent link index: {}".format(joint_info[16]))
+
+# print state of joint 2
+joints_index_list = range(num_joints)
+joints_state_list = pybullet.getJointStates(robot, joints_index_list)
+
+print("\nJoint position: {}".format(joints_state_list[joint_index][0]))
+print("Joint velocity: {}".format(joints_state_list[joint_index][1]))
+print("Joint reaction forces (Fx, Fy, Fz, Mx, My, Mz): {}".format(joints_state_list[joint_index][2]))
+print("Torque applied to joint: {}".format(joints_state_list[joint_index][3]))
+
+# print state of link 2
+link_state_list = pybullet.getLinkState(robot, 2)
+print("\nLink position (center of mass): {}".format(link_state_list[0]))
+print("Link orientation (center of mass): {}".format(link_state_list[1]))
+print("Local position offset of inertial frame: {}".format(link_state_list[2]))
+print("Local orientation offset of inertial frame: {}".format(link_state_list[3]))
+print("Link frame position: {}".format(link_state_list[4]))
+print("Link frame orientation: {}".format(link_state_list[5]))
+
 
 # setting up controlling the robot
+pybullet.setJointMotorControlArray(robot, range(num_joints), pybullet.POSITION_CONTROL, 
+	 targetPositions=[1.5]*num_joints)
+
+
+
+# orientation = pybullet.getQuaternionFromEuler([3.14, 0., 0.])
+# targetPositionJoints = pybullet.calculateInverseKinematics(robot, num_joints, [0.1, 0.1, 0.4],
+# 	targetOrientation=orientation)
+
 # pybullet.setJointMotorControlArray(robot, range(num_joints), pybullet.POSITION_CONTROL, 
-# 	 targetPositions=[0.2]*num_joints)
+# 	 targetPositions=targetPositionJoints)
 
 
 for i in range (10000):
-    pybullet.stepSimulation()
-    time.sleep(1./240.)
+	pybullet.stepSimulation()
+	
+	# gets the joint
+	joints_index_list = range(num_joints)
+	joints_state_list = pybullet.getJointStates(robot, joints_index_list)
+	print("\nJoint position: {}".format(joints_state_list[joint_index][0]))
+	print("Joint velocity: {}".format(joints_state_list[joint_index][1]))
+	print("Joint reaction forces (Fx, Fy, Fz, Mx, My, Mz): {}".format(joints_state_list[joint_index][2]))
+	print("Torque applied to joint: {}".format(joints_state_list[joint_index][3]))
+    
+	time.sleep(1./240.)
 
 print("Done!")
 
