@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<robot name="simplecar">
+
+    <!-- Base of the Arm --> 
+    <link name="base_link">
+        <visual> 
+            <geometry> 
+                <box size="0.2 0.2 0.1"/>
+            </geometry>
+        </visual> 
+    </link>
+
+    <!-- Link 1 of the Arm -->
+    <link name="link1">
+        <visual>
+            <geometry>
+                <box size = "0.2 0.2 0.9"/>
+            </geometry>
+            <origin xyz="0 0 0.1"/>
+        </visual>
+    </link>
+
+    <!-- Joint 1 of the Arm -->
+    <joint name="joint1" type="continuous">
+        <parent link="base_link"/>
+        <child link="link1"/>
+        <axis xyz="0 1 0"/>
+        <origin xyz="0 0 0"/>
+    </joint>
+
+    <!-- Link 2 of the Arm -->
+    <link name="link2">
+        <visual>
+            <geometry>
+                <box size = "0.2 0.2 0.9"/>
+            </geometry>
+            <origin xyz="0 0 1"/>
+        </visual>
+    </link>
+
+    <!-- Joint 2 of the Arm -->
+    <joint name="joint2" type="continuous">
+        <parent link="link1"/>
+        <child link="link2"/>
+        <axis xyz="1 0 0"/>
+        <origin xyz="0 0 0"/>
+    </joint>
+
+</robot>
